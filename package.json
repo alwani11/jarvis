@@ -1,0 +1,38 @@
+{
+  "name": "jarvis",
+  "version": "1.0.0",
+  "description": "Jarvis: a dry, witty British-butler voice assistant for Windows, powered by your Claude login and Fish Audio.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/run.js",
+    "dist": "electron-builder --win",
+    "postinstall": "node node_modules/electron/install.js"
+  },
+  "license": "MIT",
+  "build": {
+    "appId": "com.jarvis.assistant",
+    "productName": "Jarvis",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "asarUnpack": [
+      "src/tools-mcp/**",
+      "src/store.js",
+      "src/tokens.js",
+      "node_modules/@modelcontextprotocol/**",
+      "node_modules/zod/**"
+    ]
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.1",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "electron": "^44.9.0",
+    "uiohook-napi": "^1.5.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.15.3"
+  }
+}

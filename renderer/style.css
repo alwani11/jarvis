@@ -1,0 +1,34 @@
+:root { --bg:#03060f; --line:rgba(70,170,255,.28); --glow:#3aa9ff; --text:#cfe8ff; --mute:#6f90b3; }
+* { box-sizing: border-box; }
+html, body { height:100%; margin:0; }
+body { background:radial-gradient(ellipse at 50% 45%, #0a1830 0%, var(--bg) 70%); color:var(--text); font:14px/1.5 Bahnschrift, "Segoe UI", sans-serif; overflow:hidden; }
+.grid { position:fixed; inset:0; background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px); background-size:56px 56px; opacity:.12; mask-image:radial-gradient(circle at 50% 50%,#000 10%,transparent 75%); }
+.hud { position:relative; height:100%; display:grid; grid-template-columns:260px 1fr 320px; gap:20px; padding:20px; }
+.panel { border:1px solid var(--line); background:rgba(8,18,38,.55); backdrop-filter:blur(6px); padding:18px; display:flex; flex-direction:column; min-height:0;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px)); }
+h3 { margin:0 0 14px; font-size:12px; letter-spacing:.3em; color:var(--glow); font-weight:600; }
+.clock { font-size:44px; letter-spacing:.04em; text-shadow:0 0 18px var(--glow); }
+.muted { color:var(--mute); }
+dl { margin:18px 0 0; } dt { font-size:11px; letter-spacing:.2em; color:var(--mute); text-transform:uppercase; margin-top:12px; } dd { margin:2px 0 0; }
+.hint { margin-top:auto; color:var(--mute); font-size:12px; }
+kbd { border:1px solid var(--line); padding:0 6px; border-radius:4px; background:rgba(58,169,255,.1); }
+.stage { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; }
+#orb { position:absolute; inset:0; width:100%; height:100%; cursor:pointer; }
+.caption { position:absolute; bottom:6%; left:8%; right:8%; text-align:center; font-size:20px; text-shadow:0 0 14px rgba(58,169,255,.8); min-height:30px; pointer-events:none; }
+.log { overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; padding-right:4px; }
+.log p { margin:0; } .log .u { color:var(--mute); } .log .j { color:var(--text); } .log .e { color:#ff8a8a; font-size:12px; }
+.log b { font-size:11px; letter-spacing:.2em; margin-right:6px; color:var(--glow); }
+button { font:inherit; color:var(--text); background:rgba(58,169,255,.16); border:1px solid var(--glow); padding:7px 16px; cursor:pointer; letter-spacing:.08em; }
+button:hover { background:rgba(58,169,255,.32); } button.ghost { background:none; border-color:var(--line); }
+.switch input { display:none; } .switch span { display:inline-block; width:36px; height:18px; border:1px solid var(--glow); border-radius:9px; position:relative; vertical-align:middle; margin-right:6px; }
+.switch span::after { content:""; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--mute); transition:.2s; }
+.switch input:checked + span::after { left:20px; background:var(--glow); box-shadow:0 0 8px var(--glow); }
+.modal { position:fixed; inset:0; background:rgba(2,5,12,.8); display:flex; align-items:center; justify-content:center; overflow:auto; }
+.modal[hidden] { display:none; }
+.card { width:min(520px,92vw); max-height:92vh; overflow:auto; background:#08142a; border:1px solid var(--glow); padding:24px; box-shadow:0 0 40px rgba(58,169,255,.25); }
+.card h2 { margin:0 0 8px; letter-spacing:.2em; } .card h4 { margin:18px 0 6px; color:var(--glow); letter-spacing:.15em; font-size:12px; text-transform:uppercase; }
+.card label { display:block; margin:6px 0; color:var(--mute); font-size:12px; }
+.card input[type=text], .card input[type=password], .card input:not([type]) { width:100%; margin-top:2px; padding:7px 9px; color:var(--text); background:#050c1b; border:1px solid var(--line); font:inherit; }
+.card label.check { color:var(--text); margin-top:18px; } .row { display:flex; gap:12px; align-items:center; margin-top:8px; } .row.end { justify-content:flex-end; margin-top:16px; }
+.note { color:#ffd27f; font-size:12px; min-height:1em; margin:4px 0; }
+@media (max-width:1000px) { .hud { grid-template-columns:1fr; grid-template-rows:auto 1fr auto; } .panel.left,.panel.right { display:none; } }

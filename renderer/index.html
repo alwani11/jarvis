@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jarvis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grid"></div>
+  <main class="hud">
+    <section class="panel left">
+      <h3>SYSTEM</h3>
+      <div id="clock" class="clock">--:--</div>
+      <div id="date" class="muted">&nbsp;</div>
+      <dl>
+        <dt>Status</dt><dd id="status">Starting…</dd>
+        <dt>Speech model</dt><dd id="model">Loading…</dd>
+        <dt>Hands-free</dt><dd><label class="switch"><input type="checkbox" id="wakeToggle" checked><span></span></label> "Hey Jarvis"</dd>
+      </dl>
+      <p class="hint">Hold <kbd>Ctrl</kbd>+<kbd>Space</kbd> to talk, or hold the orb with your mouse.</p>
+      <button id="openSettings">Settings</button>
+    </section>
+
+    <section class="stage">
+      <canvas id="orb"></canvas>
+      <div id="caption" class="caption">&nbsp;</div>
+    </section>
+
+    <section class="panel right">
+      <h3>TRANSCRIPT</h3>
+      <div id="log" class="log"></div>
+    </section>
+  </main>
+
+  <div id="settings" class="modal" hidden>
+    <div class="card">
+      <h2>Settings</h2>
+      <p id="claudeNote" class="note"></p>
+
+      <h4>Voice (Fish Audio)</h4>
+      <label>API key <input id="fishKey" type="password" autocomplete="off"></label>
+      <label>Voice ID <input id="fishVoice" autocomplete="off"></label>
+      <label>Model <input id="fishModel" autocomplete="off"></label>
+
+      <h4>Google (Gmail drafts + Calendar, read only)</h4>
+      <label>Client ID <input id="googleClientId" autocomplete="off"></label>
+      <label>Client secret <input id="googleClientSecret" type="password" autocomplete="off"></label>
+      <div class="row"><button data-connect="google">Connect Google</button><span id="googleState" class="muted"></span></div>
+
+      <h4>Spotify (needs Premium)</h4>
+      <label>Client ID <input id="spotifyClientId" autocomplete="off"></label>
+      <div class="row"><button data-connect="spotify">Connect Spotify</button><span id="spotifyState" class="muted"></span></div>
+
+      <label class="check"><input type="checkbox" id="autostart"> Start Jarvis when I sign in to Windows</label>
+      <p id="msg" class="note"></p>
+      <div class="row end"><button id="closeSettings" class="ghost">Close</button><button id="saveSettings">Save</button></div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
