@@ -3,40 +3,215 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jarvis</title>
+  <title>JARVIS // AI WORKSHOP OS</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Background sci-fi grid overlay -->
   <div class="grid"></div>
-  <main class="hud">
-    <section class="panel left">
-      <h3>SYSTEM</h3>
-      <div id="clock" class="clock">--:--</div>
-      <div id="date" class="muted">&nbsp;</div>
-      <dl>
-        <dt>Status</dt><dd id="status">Starting…</dd>
-        <dt>Speech model</dt><dd id="model">Loading…</dd>
-        <dt>Hands-free</dt><dd><label class="switch"><input type="checkbox" id="wakeToggle" checked><span></span></label> "Hey Jarvis"</dd>
-      </dl>
-      <p class="hint">Hold <kbd>Ctrl</kbd>+<kbd>Space</kbd> to talk, or hold the orb with your mouse.</p>
-      <button id="openSettings">Settings</button>
-    </section>
 
-    <section class="stage">
-      <canvas id="orb"></canvas>
-      <div id="caption" class="caption">&nbsp;</div>
-    </section>
+  <!-- 3D Knowledge Graph WebGL Canvas -->
+  <div id="graphContainer" class="graph-viewport"></div>
 
-    <section class="panel right">
-      <h3>TRANSCRIPT</h3>
-      <div id="log" class="log"></div>
-    </section>
-  </main>
+  <!-- Main Holographic HUD Interface -->
+  <div class="hud-overlay">
+    
+    <!-- Top HUD Navigation Bar -->
+    <header class="top-bar">
+      <div class="brand-section">
+        <div class="status-dot"></div>
+        <div class="brand-title">AI WORKSHOP OS <span class="sub-brand">// J.A.R.V.I.S. MATRIX</span></div>
+      </div>
 
+      <div class="center-metrics">
+        <div class="metric-pill">
+          <span class="metric-label">TIME</span>
+          <span id="clock" class="metric-value">--:--</span>
+          <span id="date" class="metric-muted">&nbsp;</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-label">ENGINE</span>
+          <span id="engineDisplay" class="metric-value highlight">GEMINI 2.5 FLASH</span>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-label">HANDS-FREE</span>
+          <label class="switch">
+            <input type="checkbox" id="wakeToggle" checked>
+            <span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <div class="cluster-badge"><span class="badge-dot"></span> 410 NODES // 780 LINKS</div>
+        <button id="toggleLogBtn" class="hud-btn"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> LOGS</button>
+        <button id="openSettings" class="hud-btn primary"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> SETTINGS</button>
+      </div>
+    </header>
+
+    <!-- Center Workspace -->
+    <main class="main-layout">
+      
+      <!-- Left Panel: Knowledge Clusters & Orbit Controls -->
+      <aside class="panel left-panel">
+        <div class="panel-header">
+          <h3>KNOWLEDGE MATRIX</h3>
+          <span class="header-tag">3D GRAPH</span>
+        </div>
+
+        <div class="clusters-list" id="clustersList">
+          <div class="cluster-item" data-cluster="0">
+            <span class="cluster-dot" style="background:#38bdf8;"></span>
+            <span class="cluster-name">Core Intelligence</span>
+            <span class="cluster-count">95</span>
+          </div>
+          <div class="cluster-item" data-cluster="1">
+            <span class="cluster-dot" style="background:#4ade80;"></span>
+            <span class="cluster-name">Automations & Tasks</span>
+            <span class="cluster-count">70</span>
+          </div>
+          <div class="cluster-item" data-cluster="2">
+            <span class="cluster-dot" style="background:#c084fc;"></span>
+            <span class="cluster-name">Neural Memory</span>
+            <span class="cluster-count">85</span>
+          </div>
+          <div class="cluster-item" data-cluster="3">
+            <span class="cluster-dot" style="background:#facc15;"></span>
+            <span class="cluster-name">Web & Research</span>
+            <span class="cluster-count">65</span>
+          </div>
+          <div class="cluster-item" data-cluster="4">
+            <span class="cluster-dot" style="background:#f87171;"></span>
+            <span class="cluster-name">Security Failsafes</span>
+            <span class="cluster-count">40</span>
+          </div>
+          <div class="cluster-item" data-cluster="5">
+            <span class="cluster-dot" style="background:#fb923c;"></span>
+            <span class="cluster-name">Devices & Media</span>
+            <span class="cluster-count">55</span>
+          </div>
+        </div>
+
+        <div class="controls-section">
+          <h4>GRAPH CONTROLS</h4>
+          <div class="slider-row">
+            <span class="slider-label">Orbit Speed</span>
+            <input type="range" id="orbitSlider" min="0" max="3" step="0.1" value="0.6">
+          </div>
+          <button id="resetViewBtn" class="hud-btn small">Reset 3D View</button>
+        </div>
+
+        <div class="system-status-box">
+          <div class="status-row">
+            <span class="muted">Status</span>
+            <span id="status" class="val">Starting…</span>
+          </div>
+          <div class="status-row">
+            <span class="muted">Speech Model</span>
+            <span id="model" class="val">Loading…</span>
+          </div>
+        </div>
+
+        <p class="hint">Hold <kbd>Ctrl</kbd>+<kbd>Space</kbd> or click the Arc Reactor to talk.</p>
+      </aside>
+
+      <!-- Center Space: 3D graph operates here, text captions float below -->
+      <section class="stage">
+        <!-- Floating Subtitle Bar (from Zubair's video) -->
+        <div class="caption-container">
+          <div class="caption-glass">
+            <div class="caption-speaker">JARVIS</div>
+            <div id="caption" class="caption-text">Systems online, sir. Standing by.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: The Iron Man Arc Reactor & Telemetry -->
+      <aside class="panel right-panel">
+        <div class="panel-header">
+          <h3>REACTOR CORE</h3>
+          <span id="reactorBadge" class="header-tag pulse">ONLINE</span>
+        </div>
+
+        <!-- Arc Reactor Canvas HUD -->
+        <div class="reactor-wrapper">
+          <canvas id="orb" title="Click and hold to talk"></canvas>
+        </div>
+
+        <div class="reactor-actions">
+          <button id="talkBtn" class="talk-button">
+            <span class="mic-icon">🎙️</span>
+            <span id="talkBtnText">HOLD TO TALK</span>
+          </button>
+        </div>
+
+        <div class="telemetry-box">
+          <h4>TELEMETRY</h4>
+          <div class="telemetry-row">
+            <span>Core Model</span>
+            <span class="cyan">Gemini 2.5 Flash</span>
+          </div>
+          <div class="telemetry-row">
+            <span>Latency</span>
+            <span id="latencyDisplay" class="green">&lt; 350 ms</span>
+          </div>
+          <div class="telemetry-row">
+            <span>Voice Synth</span>
+            <span id="voiceSynthDisplay" class="cyan">Fish Audio / System</span>
+          </div>
+          <div class="telemetry-row">
+            <span>Security Lock</span>
+            <span class="green">Active (Read/Draft)</span>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Collapsible Log / Transcript Drawer -->
+  <div id="logDrawer" class="log-drawer" hidden>
+    <div class="log-drawer-header">
+      <h3>CONVERSATION TRANSCRIPT</h3>
+      <button id="closeLogBtn" class="hud-btn small">✕</button>
+    </div>
+    <div id="log" class="log"></div>
+  </div>
+
+  <!-- Settings Modal -->
   <div id="settings" class="modal" hidden>
     <div class="card">
-      <h2>Settings</h2>
+      <div class="modal-header">
+        <h2>JARVIS SETTINGS</h2>
+        <button id="closeSettingsX" class="close-x">✕</button>
+      </div>
       <p id="claudeNote" class="note"></p>
+
+      <h4>Brain — Provider</h4>
+      <label>Active AI Engine
+        <select id="brainProvider" class="provider-select">
+          <option value="gemini">🔵 Google Gemini (Free)</option>
+          <option value="groq">⚡ Groq (Fast &amp; Free)</option>
+          <option value="claude">🟠 Anthropic Claude</option>
+        </select>
+      </label>
+
+      <div class="provider-section" data-provider="gemini">
+        <h4>Gemini Settings</h4>
+        <label>API key <input id="geminiKey" type="password" autocomplete="off" placeholder="Free key from aistudio.google.com"></label>
+        <label>Model <input id="geminiModel" autocomplete="off" placeholder="gemini-2.5-flash"></label>
+      </div>
+
+      <div class="provider-section" data-provider="groq">
+        <h4>Groq Settings</h4>
+        <label>API key <input id="groqKey" type="password" autocomplete="off" placeholder="Free key from console.groq.com"></label>
+        <label>Model <input id="groqModel" autocomplete="off" placeholder="llama-3.3-70b-versatile"></label>
+      </div>
+
+      <div class="provider-section" data-provider="claude">
+        <h4>Claude Settings</h4>
+        <label>API key <input id="claudeKey" type="password" autocomplete="off" placeholder="Key from console.anthropic.com"></label>
+        <label>Model <input id="claudeModel" autocomplete="off" placeholder="claude-3-5-haiku-20241022"></label>
+      </div>
 
       <h4>Voice (Fish Audio)</h4>
       <label>API key <input id="fishKey" type="password" autocomplete="off"></label>

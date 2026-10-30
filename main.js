@@ -57,6 +57,7 @@ async function ask(text) {
   send('heard', text);
   send('turn-start', { fish: useFish });
 
+  const t0 = Date.now();
   let chain = Promise.resolve(), buf = '';
   const speak = (s) => {
     send('sentence', s);
@@ -78,12 +79,15 @@ async function ask(text) {
     split(buf, true).sentences.forEach(speak);
     history.push({ u: text, a: full.trim() });
     if (history.length > 6) history.shift();
+    // Report latency to renderer
+    const ms = Date.now() - t0;
+    send('latency', ms);
   } catch (e) {
     if (id !== turnId) return;
     send('error', e.message);
     speak((await brain.claudeInstalled())
-      ? 'I seem to have lost my train of thought, sir. Do check that Claude Code is logged in.'
-      : 'I cannot reach my brain, sir. Claude Code does not appear to be installed.');
+      ? 'I seem to have lost my train of thought, sir. Do check your Gemini API key or internet connection.'
+      : 'I require a Gemini API key to think, sir. Please enter your free key in Settings.');
   }
   await chain;
   if (id === turnId) send('turn-end');
@@ -91,10 +95,15 @@ async function ask(text) {
 
 ipcMain.on('ask', (_e, text) => ask(text));
 ipcMain.on('cancel', cancel);
-ipcMain.handle('settings:get', async () => ({
-  ...store.config(), ...auth.connected(),
-  autostart: app.getLoginItemSettings().openAtLogin, claudeOk: await brain.claudeInstalled(),
-}));
+ipcMain.handle('settings:get', async () => {
+  const brainOk = await brain.claudeInstalled();
+  return {
+    ...store.config(), ...auth.connected(),
+    autostart: app.getLoginItemSettings().openAtLogin,
+    brainOk,
+    claudeOk: brainOk, // kept for compatibility
+  };
+});
 ipcMain.handle('settings:save', (_e, s) => {
   const { autostart, ...rest } = s;
   store.write('config.json', { ...store.read('config.json'), ...rest });

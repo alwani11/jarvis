@@ -3,6 +3,6 @@
 export const clean = (t) => t.replace(/[\[(][^\])]*[\])]/g, ' ').replace(/\s+/g, ' ').trim(); // drops [BLANK_AUDIO], (music) etc.
 
 export function parseWake(text) {
-  const m = text.match(/\b(?:(?:hey|hi|okay|ok)[\s,]+)?(?:jarvis|jarvas|jarvus|jervis|jarvice)\b[\s,.!?:;-]*/i);
+  const m = text.match(/\b(?:(?:hey|hi|okay|ok|yo)[\s,]+)?(?:jarvis|jarvas|jarvus|jervis|jarvice|jarvi)\b[\s,.!?:;-]*/i);
   return m ? text.slice(m.index + m[0].length).trim() : null;
 }

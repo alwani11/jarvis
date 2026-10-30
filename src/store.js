@@ -16,11 +16,33 @@ exports.write = (name, obj) => fs.writeFileSync(path.join(dir, name), JSON.strin
 exports.config = () => {
   const c = exports.read('config.json');
   return {
+    // ── Brain provider selection ──────────────────────────────────────────
+    brainProvider: c.brainProvider || process.env.BRAIN_PROVIDER || 'gemini', // 'gemini' | 'groq' | 'claude'
+
+    // ── Gemini ────────────────────────────────────────────────────────────
+    geminiKey: c.geminiKey || process.env.GEMINI_API_KEY || '',
+    geminiModel: (c.geminiModel && !['gemini-2.0-flash', 'gemini-3.8-flash'].includes(c.geminiModel))
+      ? c.geminiModel
+      : (process.env.GEMINI_MODEL || 'gemini-2.5-flash'),
+
+    // ── Groq ──────────────────────────────────────────────────────────────
+    groqKey: c.groqKey || process.env.GROQ_API_KEY || '',
+    groqModel: c.groqModel || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+
+    // ── Claude (Anthropic) ────────────────────────────────────────────────
+    claudeKey: c.claudeKey || process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || '',
+    claudeModel: c.claudeModel || process.env.CLAUDE_MODEL || 'claude-3-5-haiku-20241022',
+
+    // ── Voice (Fish Audio) ────────────────────────────────────────────────
     fishKey: c.fishKey || process.env.FISH_API_KEY || '',
     fishVoice: c.fishVoice || process.env.FISH_VOICE_ID || '',
     fishModel: c.fishModel || 's2.1-pro-free',
+
+    // ── Google OAuth ──────────────────────────────────────────────────────
     googleClientId: c.googleClientId || '',
     googleClientSecret: c.googleClientSecret || '',
+
+    // ── Spotify OAuth ─────────────────────────────────────────────────────
     spotifyClientId: c.spotifyClientId || '',
   };
 };
